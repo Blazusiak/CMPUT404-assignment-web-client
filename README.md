@@ -16,7 +16,13 @@ https://github.com/tywtyw2002, and https://github.com/treedust
 
 Collaborators
 
+* Justin Widney - Discussed how to communicate with the server
+
 Resources
+
+* https://docs.python.org/3/library/urllib.parse.html
+* https://www.tutorialspoint.com/http/http_header_fields.htm
+* https://www.jmarshall.com/easy/http/#sample
 
 But the server.py example is derived from the python documentation
 examples thus some of the code is Copyright © 2001-2013 Python
