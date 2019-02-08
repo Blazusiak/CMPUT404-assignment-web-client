@@ -34,29 +34,48 @@ class HTTPResponse(object):
 
 class HTTPClient(object):
 
+    # Connect Socket
     def connect(self, host, port):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.connect((host, port))
         return self.socket
 
-    # UPDATE THIS
+    # Returns status code
     def get_code(self, data):
-        split_data = data.split("\r\n")
-        split_again = split_data[0].split(" ")
-        return split_again[1]
+        code = int(data.split(" ")[1])
+        return code
 
-    # CONSIDER REMOVING THIS
-    def get_headers(self,data):
-        return None
-
-    # Should be working well, FIX VAR
+    # Returns body
     def get_body(self, data):
-        split_data = data.split("\r\n\r\n")
-        return split_data[1]
+        body = data.split("\r\n\r\n")[1]
+        return body
+
+    # Parse url for host, port and path
+    def get_parsed_url(self, url):
+        parsed_url = urllib.parse.urlparse(url)
+        scheme = parsed_url.scheme
+        host = parsed_url.hostname
+        port = parsed_url.port
+        path = parsed_url.path
+
+        # Default Port if one is not given
+        if port == None:
+            if scheme == "https":
+                port = 443
+            else:
+                port = 80
+        
+        # Default Path if one is not given
+        if path == "":
+            path = "/"
+
+        return host, int(port), path
     
+    # Encode and send all data to server
     def sendall(self, data):
         self.socket.sendall(data.encode('utf-8'))
-        
+
+    # Close the existing connection to server    
     def close(self):
         self.socket.close()
 
@@ -74,38 +93,57 @@ class HTTPClient(object):
 
     # GET Request from Client
     def GET(self, url, args=None):
-        code = 500
-        body = ""
 
-        # Parse url for host and port
-        parsed_url = urllib.parse.urlparse(url)
-        host, port = parsed_url.netloc.split(':')
-        path = urllib.parse.urlparse(url).path
-        
+        # Fetch host, port and path information
+        host, port, path = self.get_parsed_url(url)
+
         # Connect to the server
-        sock = self.connect(host, int(port))
-        print(sock) # Make sure port 80 for google
-        header = "GET "+path+" HTTP/1.1\nHost: "+host+"\n\n"
-        
-        self.sendall(header)
+        sock = self.connect(host, port)
+        request = "GET "+path+" HTTP/1.1\r\nHost: "+host+"\r\nConnection: close\r\n\r\n"
+        print("REQUEST= ", request)
+        self.sendall(request)
         response = self.recvall(sock)
 
-        self.get_headers(response)
-        # Update status code
-        code = int(self.get_code(response))
+        # Fetch status code
+        code = self.get_code(response)
 
-        # Update body
+        # Fetch body
         body = self.get_body(response)
 
         # Close the socket
         self.close()
 
-        return HTTPResponse(int(code), body)
+        return HTTPResponse(code, body)
 
     # POST Request from Client
     def POST(self, url, args=None):
         code = 500
         body = ""
+        # Fetch host, port and path information
+        host, port, path = self.get_parsed_url(url)
+
+        # Connect to the server
+        sock = self.connect(host, port)
+
+        # Check if there are args
+        if args == None:
+            request = "POST "+path+" HTTP/1.1\r\nHost: "+host+"\r\nContent-Length: "+ str(0)+"\r\nContent-Type: application/x-www-form-urlencoded\r\nConnection: close\r\n\r\n"
+
+        else:
+            request = a
+
+            
+        self.sendall(request)
+        response = self.recvall(sock)
+
+        # Fetch status code
+        code = self.get_code(response)
+
+        # Fetch body
+        body = self.get_body(response)
+
+        # Close the socket
+        self.close()
 
         return HTTPResponse(code, body)
 

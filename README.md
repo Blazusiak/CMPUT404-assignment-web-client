@@ -17,6 +17,7 @@ https://github.com/tywtyw2002, and https://github.com/treedust
 Collaborators
 
 * Justin Widney - Discussed how to communicate with the server
+* Mohamad Jamaleddine - Discussed parsing and sending requests
 
 Resources
 
