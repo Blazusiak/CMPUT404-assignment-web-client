@@ -24,6 +24,7 @@ Resources
 * https://docs.python.org/3/library/urllib.parse.html
 * https://www.tutorialspoint.com/http/http_header_fields.htm
 * https://www.jmarshall.com/easy/http/#sample
+* https://stackoverflow.com/questions/5607551/how-to-urlencode-a-querystring-in-python
 
 But the server.py example is derived from the python documentation
 examples thus some of the code is Copyright © 2001-2013 Python
