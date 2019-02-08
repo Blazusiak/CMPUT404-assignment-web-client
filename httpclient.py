@@ -130,9 +130,9 @@ class HTTPClient(object):
             request = "POST "+path+" HTTP/1.1\r\nHost: "+host+"\r\nContent-Length: "+ str(0)+"\r\nContent-Type: application/x-www-form-urlencoded\r\nConnection: close\r\n\r\n"
 
         else:
-            request = a
+            request = "POST "+path+" HTTP/1.1\r\nHost: "+host+"\r\nContent-Length: "+ str(len(urllib.parse.urlencode(args)))+"\r\nContent-Type: application/x-www-form-urlencoded\r\nConnection: close\r\n\r\n"+urllib.parse.urlencode(args)
 
-            
+
         self.sendall(request)
         response = self.recvall(sock)
 
