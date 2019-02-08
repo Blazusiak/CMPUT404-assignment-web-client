@@ -18,6 +18,12 @@
 # Write your own HTTP GET and POST
 # The point is to understand what you have to send and get experience with it
 
+# Resources
+# https://docs.python.org/3/library/urllib.parse.html
+# https://www.tutorialspoint.com/http/http_header_fields.htm
+# https://www.jmarshall.com/easy/http/#sample
+# https://stackoverflow.com/questions/5607551/how-to-urlencode-a-querystring-in-python
+
 import sys
 import socket
 import re
@@ -99,9 +105,12 @@ class HTTPClient(object):
 
         # Connect to the server
         sock = self.connect(host, port)
-        request = "GET "+path+" HTTP/1.1\r\nHost: "+host+"\r\nConnection: close\r\n\r\n"
-        print("REQUEST= ", request)
+
+        # Send Request
+        request = "GET " + path + " HTTP/1.1\r\nHost: " + host + "\r\nConnection: close\r\n\r\n"
         self.sendall(request)
+
+        # Receive Response
         response = self.recvall(sock)
 
         # Fetch status code
@@ -113,12 +122,12 @@ class HTTPClient(object):
         # Close the socket
         self.close()
 
+        # Return HTTPResponse Object
         return HTTPResponse(code, body)
 
     # POST Request from Client
     def POST(self, url, args=None):
-        code = 500
-        body = ""
+         
         # Fetch host, port and path information
         host, port, path = self.get_parsed_url(url)
 
@@ -127,13 +136,17 @@ class HTTPClient(object):
 
         # Check if there are args
         if args == None:
-            request = "POST "+path+" HTTP/1.1\r\nHost: "+host+"\r\nContent-Length: "+ str(0)+"\r\nContent-Type: application/x-www-form-urlencoded\r\nConnection: close\r\n\r\n"
+            # No queries
+            request = "POST " + path + " HTTP/1.1\r\nHost: " + host + "\r\nContent-Length: " + str(0) + "\r\nContent-Type: application/x-www-form-urlencoded\r\nConnection: close\r\n\r\n"
 
         else:
-            request = "POST "+path+" HTTP/1.1\r\nHost: "+host+"\r\nContent-Length: "+ str(len(urllib.parse.urlencode(args)))+"\r\nContent-Type: application/x-www-form-urlencoded\r\nConnection: close\r\n\r\n"+urllib.parse.urlencode(args)
+            # Include queries
+            request = "POST " + path + " HTTP/1.1\r\nHost: " + host + "\r\nContent-Length: " + str(len(urllib.parse.urlencode(args))) + "\r\nContent-Type: application/x-www-form-urlencoded\r\nConnection: close\r\n\r\n" + urllib.parse.urlencode(args)
 
-
+        # Send Request
         self.sendall(request)
+
+        # Receive Response
         response = self.recvall(sock)
 
         # Fetch status code
@@ -145,6 +158,7 @@ class HTTPClient(object):
         # Close the socket
         self.close()
 
+        # Return HTTPResponse Object
         return HTTPResponse(code, body)
 
     # Command is used separately from test server files
