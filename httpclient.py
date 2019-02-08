@@ -122,7 +122,8 @@ class HTTPClient(object):
         # Close the socket
         self.close()
 
-        # Return HTTPResponse Object
+        # Print Message body and return HTTPResponse Object
+        print(body)
         return HTTPResponse(code, body)
 
     # POST Request from Client
@@ -158,7 +159,8 @@ class HTTPClient(object):
         # Close the socket
         self.close()
 
-        # Return HTTPResponse Object
+        # Print Message body and return HTTPResponse Object
+        print(body)
         return HTTPResponse(code, body)
 
     # Command is used separately from test server files
